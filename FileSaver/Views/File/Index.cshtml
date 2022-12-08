@@ -1,0 +1,30 @@
+﻿@model Filess
+
+<form asp-action="CreateFile">
+
+  <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+
+  <div class="form-outline mb-4">
+      <label class="form-label" asp-for="FileContent"></label>
+      <div>
+        <textarea asp-for="FileContent" class="form-control"></textarea>
+        <span asp-validation-for="FileContent" class="text-danger"></span>
+      </div>
+  </div>
+ <input type="Submit" class="btn btn-primary" value="Create" />
+</form>
+<br />
+
+<a asp-action = "ViewFile" class="btn btn-primary"> View File </a>
+
+
+@section Scripts{
+
+     <script>
+           tinymce.init({
+               selector: 'textarea',
+               paste_data_images: false,
+               height: 500,
+           });
+       </script>
+}

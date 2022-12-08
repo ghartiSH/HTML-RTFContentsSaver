@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Filess>
+
+@foreach(var item in Model){
+    <div class="card">
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.FileContent))
+    </div>
+    <br />
+}
