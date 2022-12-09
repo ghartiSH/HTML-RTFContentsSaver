@@ -417,3 +417,6 @@ C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\zh-Hant
 C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\obj\Debug\net6.0\FileSaver.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\AspNetCoreHero.ToastNotification.Views.dll
 C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\AspNetCoreHero.ToastNotification.dll
+C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\DocumentFormat.OpenXml.dll
+C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\SpreadsheetLight.dll
+C:\Users\bhara\Desktop\AppDev Final\FileSaver\FileSaver\bin\Debug\net6.0\System.IO.Packaging.dll

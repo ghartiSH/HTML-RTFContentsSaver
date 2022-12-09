@@ -14,6 +14,7 @@ namespace FileSaver.DBContext
             base.OnModelCreating(builder);
         }
         
-        public DbSet<Filess>? Files { get; set; }
+        public DbSet<Filess> Files { get; set; }
+        public DbSet<FileModel> FileModels { get; set; }
     }
 }

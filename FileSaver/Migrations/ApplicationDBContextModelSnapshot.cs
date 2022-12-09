@@ -21,6 +21,112 @@ namespace FileSaver.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FileSaver.Models.FileModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("AltLabel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Before")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Definition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Deprecated")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HasRelatedSynonym")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HiddenLabel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IRI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Identifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InverseOf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsDefinedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LinkFirst")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LinkSecond")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocatedIn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrefLabel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_appealsTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_cited")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_filed")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_hasExpense")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_participatedIn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_seealso")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_seeksToAchieve")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sali_workedFor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SameAs")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeeAlso")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Superclass")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("legacyIdentifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("FileModels");
+                });
+
             modelBuilder.Entity("FileSaver.Models.Filess", b =>
                 {
                     b.Property<int>("FileId")
