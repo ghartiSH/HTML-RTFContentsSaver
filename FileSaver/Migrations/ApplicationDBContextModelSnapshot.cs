@@ -72,10 +72,12 @@ namespace FileSaver.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LinkFirst")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("http://webprotege.stanford.edu/RBwBJ2lKdRgVYPkQmoJN1pD");
 
                     b.Property<string>("LinkSecond")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("http://webprotege.stanford.edu/RCAWR19VGcj184M2SBAaeoj");
 
                     b.Property<string>("LocatedIn")
                         .HasColumnType("nvarchar(max)");
@@ -114,7 +116,8 @@ namespace FileSaver.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Superclass")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Superclass(es)");
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");

@@ -92,9 +92,6 @@ namespace FileSaver.Controllers
 
         }
 
-        
-
-
         public List<FileModel> ReadXLS()
         {
             List<FileModel> dataList = new();
@@ -223,7 +220,6 @@ namespace FileSaver.Controllers
 
                     }
                     dataList.Add(dataObj);
-
                 }
 
                 return dataList;

@@ -16,7 +16,7 @@ namespace FileSaver.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Superclass = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Superclasses = table.Column<string>(name: "Superclass(es)", type: "nvarchar(max)", nullable: true),
                     Label = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IRI = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -36,8 +36,8 @@ namespace FileSaver.Migrations
                     legacyIdentifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Identifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LinkFirst = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LinkSecond = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    httpwebprotegestanfordeduRBwBJ2lKdRgVYPkQmoJN1pD = table.Column<string>(name: "http://webprotege.stanford.edu/RBwBJ2lKdRgVYPkQmoJN1pD", type: "nvarchar(max)", nullable: true),
+                    httpwebprotegestanfordeduRCAWR19VGcj184M2SBAaeoj = table.Column<string>(name: "http://webprotege.stanford.edu/RCAWR19VGcj184M2SBAaeoj", type: "nvarchar(max)", nullable: true),
                     HasRelatedSynonym = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDefinedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),

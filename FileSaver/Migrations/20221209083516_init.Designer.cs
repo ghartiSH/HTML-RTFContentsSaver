@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FileSaver.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20221209053415_init")]
+    [Migration("20221209083516_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -75,10 +75,12 @@ namespace FileSaver.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LinkFirst")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("http://webprotege.stanford.edu/RBwBJ2lKdRgVYPkQmoJN1pD");
 
                     b.Property<string>("LinkSecond")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("http://webprotege.stanford.edu/RCAWR19VGcj184M2SBAaeoj");
 
                     b.Property<string>("LocatedIn")
                         .HasColumnType("nvarchar(max)");
@@ -117,7 +119,8 @@ namespace FileSaver.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Superclass")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Superclass(es)");
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");

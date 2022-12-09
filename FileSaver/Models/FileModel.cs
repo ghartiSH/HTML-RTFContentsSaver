@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FileSaver.Models
 {
@@ -6,6 +7,8 @@ namespace FileSaver.Models
     {
         [Key]
         public int ID { get; set; }
+
+        [Column("Superclass(es)")]
         public string? Superclass { get; set; }
         public string? Label { get; set; }
         public string? IRI { get; set; }
@@ -26,7 +29,11 @@ namespace FileSaver.Models
         public string? legacyIdentifier { get; set; }
         public string? Description { get; set; }
         public string? Identifier { get; set; }
+
+        [Column("http://webprotege.stanford.edu/RBwBJ2lKdRgVYPkQmoJN1pD")]
         public string? LinkFirst { get; set; }
+
+        [Column("http://webprotege.stanford.edu/RCAWR19VGcj184M2SBAaeoj")]
         public string? LinkSecond { get; set; }
         public string? HasRelatedSynonym { get; set; }
         public string? Comment { get; set; }
