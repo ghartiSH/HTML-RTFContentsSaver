@@ -1,9 +1,12 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using CsvHelper;
 using FileSaver.DBContext;
 using FileSaver.Models;
 using GemBox.Document;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using SpreadsheetLight;
+using System.Globalization;
 
 namespace FileSaver.Controllers
 {
@@ -54,15 +57,40 @@ namespace FileSaver.Controllers
             {
                 List<FileModel> fileData = ReadXLS();
 
-                for (int i = 0; i < fileData.Count; i += 500)
+                ListToDataTableConverter converter = new ListToDataTableConverter();
+
+                //sending the list to be converted as datatable
+                var dt = converter.ToDataTable(fileData);
+
+                SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-PQF1NAD;Initial Catalog=FileTest; Trusted_Connection=True; TrustServerCertificate=True");
+
+                SqlCommand columnCommand = new SqlCommand("Select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'filemodels'", con);
+
+                //new list to store the column_names of database table for mapping with the columns_names of datatable
+                List<string> dbColumnList = new();
+                con.Open();
+
+                SqlDataReader reader = columnCommand.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    var toAddList = fileData.Skip(i).Take(500).ToList();
-
-                    _context.FileModels.AddRange(toAddList);
-                    _context.SaveChanges();
-
+                    dbColumnList.Add(reader["COLUMN_NAME"].ToString());
                 }
-                toastNotification.Success( "Added " + fileData.Count + " data from Spreadsheet file");
+                con.Close();
+
+                SqlBulkCopy objBulk = new SqlBulkCopy(con);
+
+                objBulk.DestinationTableName = "filemodels";
+
+                //Columns mapping in Source and Destination
+                for (int i= 0; i< dt.Columns.Count; i++)
+                {
+                    objBulk.ColumnMappings.Add(dt.Columns[i].ColumnName, dbColumnList[i]);
+                }
+
+                con.Open();
+                objBulk.WriteToServer(dt);
+                con.Close();
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -72,30 +100,53 @@ namespace FileSaver.Controllers
             
         }
 
-        public string CreateRTF(string htmlText)
+        public IResult TestCSV()
         {
-            ComponentInfo.SetLicense("FREE-LIMITED-KEY");
-
-            var htmlLoadOptions = new HtmlLoadOptions();
-            using (var htmlStream = new MemoryStream(htmlLoadOptions.Encoding.GetBytes(htmlText)))
+            try
             {
-                // Load input HTML text as stream.
-                var document = DocumentModel.Load(htmlStream, htmlLoadOptions);
-                // Save output RTF file.
-                document.Save("tempfile.rtf");
+                WithCSVHelper();
+                return Results.Ok();
             }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex);
+            }
+        }
 
-            var docContent  = System.IO.File.ReadAllText("tempfile.rtf");
-            System.IO.File.Delete("tempfile.rtf");
 
-            return docContent;
+        public List<CSVData> WithCSVHelper()
+        {
+            List<CSVData> dataList = new();
+            DateTime startTime = DateTime.Now;
+
+            using (var reader = new StreamReader("C:\\Users\\bhara\\Desktop\\AA\\xls.xlsx"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+               csv.Context.RegisterClassMap<CSVDataMap>();
+               var records = csv.GetRecords<CSVData>();
+               Console.WriteLine(records.Count());
+            }
+            DateTime endTime = DateTime.Now;
+            var timeTaken = (endTime - startTime).TotalSeconds;
+            Console.WriteLine("CSVHelper Total Time: " + timeTaken);
+
+            return dataList;
 
         }
+
+       /* public CSVData GetCSVData(IEnumerable<CSVData> cs)
+        {
+            foreach (var item in cs)
+            {
+                yield return item;
+            }
+        }*/
 
         public List<FileModel> ReadXLS()
         {
             List<FileModel> dataList = new();
 
+            DateTime startTime = DateTime.Now;
             using (var doc = new SLDocument("C:\\Users\\bhara\\Desktop\\AA\\xls.xlsx"))
             {
                 var stats = doc.GetWorksheetStatistics();
@@ -115,7 +166,7 @@ namespace FileSaver.Controllers
                         }
                         else
                         {
-                            dataObj.ID = 0;
+                            // dataObj.ID = 0;
                             switch (column)
                             {
                                 case (1):
@@ -221,9 +272,32 @@ namespace FileSaver.Controllers
                     }
                     dataList.Add(dataObj);
                 }
-
+                DateTime endTime = DateTime.Now;
+                var timeTaken = (endTime - startTime).TotalSeconds;
+                Console.WriteLine("SpreadSheetLight Total Time: " + timeTaken);
                 return dataList;
             }
+        }
+
+
+        public string CreateRTF(string htmlText)
+        {
+            ComponentInfo.SetLicense("FREE-LIMITED-KEY");
+
+            var htmlLoadOptions = new HtmlLoadOptions();
+            using (var htmlStream = new MemoryStream(htmlLoadOptions.Encoding.GetBytes(htmlText)))
+            {
+                // Load input HTML text as stream.
+                var document = DocumentModel.Load(htmlStream, htmlLoadOptions);
+                // Save output RTF file.
+                document.Save("tempfile.rtf");
+            }
+
+            var docContent = System.IO.File.ReadAllText("tempfile.rtf");
+            System.IO.File.Delete("tempfile.rtf");
+
+            return docContent;
+
         }
     }
 }
