@@ -61,7 +61,7 @@ namespace FileSaver.Controllers
 
                 var dt = ToDataTable(fileData);
 
-                SqlConnection con = new SqlConnection(@"Server = tcp:73fd653d-d688-47ed-b9df-aacf654df1c1.database.windows.net,1433; Initial Catalog = lawtoolbox; Persist Security Info = True; User ID = jackadmin; Password = GOLD99blue$$$$; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 60;");
+                SqlConnection con = new SqlConnection(@"Server = DESKTOP-PQF1NAD; Initial Catalog = FileTest;");
 
                 SqlCommand columnCommand = new SqlCommand("Select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'tblSaliPracticeArea'", con);
 
