@@ -6,7 +6,9 @@ using GemBox.Document;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SpreadsheetLight;
+using System.Data;
 using System.Globalization;
+using System.Reflection;
 
 namespace FileSaver.Controllers
 {
@@ -55,19 +57,16 @@ namespace FileSaver.Controllers
         {
             try
             {
-                List<FileModel> fileData = ReadXLS();
+                List<CSVData> fileData = WithCSVHelper();
 
-                ListToDataTableConverter converter = new ListToDataTableConverter();
+                var dt = ToDataTable(fileData);
 
-                //sending the list to be converted as datatable
-                var dt = converter.ToDataTable(fileData);
+                SqlConnection con = new SqlConnection(@"Server = tcp:73fd653d-d688-47ed-b9df-aacf654df1c1.database.windows.net,1433; Initial Catalog = lawtoolbox; Persist Security Info = True; User ID = jackadmin; Password = GOLD99blue$$$$; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 60;");
 
-                SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-PQF1NAD;Initial Catalog=FileTest; Trusted_Connection=True; TrustServerCertificate=True");
+                SqlCommand columnCommand = new SqlCommand("Select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'tblSaliPracticeArea'", con);
 
-                SqlCommand columnCommand = new SqlCommand("Select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'filemodels'", con);
-
-                //new list to store the column_names of database table for mapping with the columns_names of datatable
                 List<string> dbColumnList = new();
+
                 con.Open();
 
                 SqlDataReader reader = columnCommand.ExecuteReader();
@@ -80,12 +79,11 @@ namespace FileSaver.Controllers
 
                 SqlBulkCopy objBulk = new SqlBulkCopy(con);
 
-                objBulk.DestinationTableName = "filemodels";
+                objBulk.DestinationTableName = "tblSaliPracticeArea";
 
-                //Columns mapping in Source and Destination
                 for (int i= 0; i< dt.Columns.Count; i++)
                 {
-                    objBulk.ColumnMappings.Add(dt.Columns[i].ColumnName, dbColumnList[i]);
+                    objBulk.ColumnMappings.Add(dt.Columns[i].ColumnName, dbColumnList[i+1]);
                 }
 
                 con.Open();
@@ -98,6 +96,50 @@ namespace FileSaver.Controllers
                 return BadRequest(ex.Message);
             }
             
+        }
+
+
+        public List<CSVData> WithCSVHelper()
+        {
+            List<CSVData> dataList = new();
+            DateTime startTime = DateTime.Now;
+
+            using (var reader = new StreamReader("C:\\Users\\bhara\\Desktop\\AA\\cc.csv"))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap<CSVDataMap>();
+                dataList = csv.GetRecords<CSVData>().ToList();
+               
+            }
+            DateTime endTime = DateTime.Now;
+            var timeTaken = (endTime - startTime).TotalSeconds;
+
+            Console.WriteLine(dataList.Count);
+            Console.WriteLine("CSVHelper Total Time: " + timeTaken);
+
+            return dataList;
+
+        }
+
+        public DataTable ToDataTable<T>(List<T> items)
+        {
+            DataTable dataTable = new DataTable(typeof(T).Name);
+
+            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo prop in Props)
+            {
+                dataTable.Columns.Add(prop.Name);
+            }
+            foreach (T item in items)
+            {
+                var values = new object[Props.Length];
+                for (int i = 0; i < Props.Length; i++)
+                {
+                    values[i] = Props[i].GetValue(item, null);
+                }
+                dataTable.Rows.Add(values);
+            }
+            return dataTable;
         }
 
         public IResult TestCSV()
@@ -113,34 +155,6 @@ namespace FileSaver.Controllers
             }
         }
 
-
-        public List<CSVData> WithCSVHelper()
-        {
-            List<CSVData> dataList = new();
-            DateTime startTime = DateTime.Now;
-
-            using (var reader = new StreamReader("C:\\Users\\bhara\\Desktop\\AA\\xls.xlsx"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-               csv.Context.RegisterClassMap<CSVDataMap>();
-               var records = csv.GetRecords<CSVData>();
-               Console.WriteLine(records.Count());
-            }
-            DateTime endTime = DateTime.Now;
-            var timeTaken = (endTime - startTime).TotalSeconds;
-            Console.WriteLine("CSVHelper Total Time: " + timeTaken);
-
-            return dataList;
-
-        }
-
-       /* public CSVData GetCSVData(IEnumerable<CSVData> cs)
-        {
-            foreach (var item in cs)
-            {
-                yield return item;
-            }
-        }*/
 
         public List<FileModel> ReadXLS()
         {
